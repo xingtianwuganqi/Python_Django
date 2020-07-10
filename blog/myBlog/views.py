@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.http import HttpResponse
+from .models import Article,Category,Link,Tui,Tag,Banner
 
 def hello(request):
     return HttpResponse('欢迎使用django！')
@@ -38,3 +39,9 @@ def index(request):
     }
     # 把上下文传递到模板里
     return render(request,'index.html',context)
+
+
+def articleList(request):
+    #对Article进行声明并实例化，然后生成对象allarticle
+
+    article = Article.objects.all()
