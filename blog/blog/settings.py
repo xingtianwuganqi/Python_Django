@@ -153,9 +153,9 @@ STATIC_URL = '/static/'
 #加入下面代码
 
 #这个是设置静态文件夹目录的路径
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-)
+]
 #设置文件上传路径，图片上传、文件上传都会存放在此目录里
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
