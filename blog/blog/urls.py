@@ -22,6 +22,8 @@ from django.conf import settings
 #导入配置文件里的文件上传配置
 from myBlog import views
 
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),# 管理后台
     path('ueditor/', include('DjangoUeditor.urls')),  # 添加DjangoUeditor的URL
@@ -33,4 +35,8 @@ urlpatterns = [
     path('tag/<tag>',views.tag,name='tag'), # 标签列表页
     path('s/',views.search,name='search'), # 搜索列表页
     path('about/',views.about,name='about'), # 关于我们的页面
+    path(r'mdeditor/', include('mdeditor.urls')),
 ]
+if settings.DEBUG:
+    # static files (images, css, javascript, etc.)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

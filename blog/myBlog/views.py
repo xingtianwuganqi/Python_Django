@@ -1,3 +1,4 @@
+import markdown
 from django.shortcuts import render
 
 # Create your views here.
@@ -111,6 +112,11 @@ def list(request,lid):
 
 def show(request,sid):
     show = Article.objects.all().get(id = sid)
+    show.body = markdown.markdown(show.body,extensions=[
+        'markdown.extensions.extra',
+        'markdown.extensions.codehilite',
+        'markdown.extensions.toc'
+    ])
     allcategory = Category.objects.all()
     tags = Tag.objects.all()
     remen = Article.objects.all().filter(tui_id = 2)[: 6]
@@ -139,10 +145,25 @@ def tag(request,tag):
     return render(request, 'tags.html', locals())
 
 def search(request):
-    pass
+    ss = request.GET.get('search')  # 获取搜索的关键词
+    list = Article.objects.filter(title__icontains=ss)  # 获取到搜索关键词通过标题进行匹配
+    remen = Article.objects.filter(tui__id=2)[:6]
+    allcategory = Category.objects.all()
+    page = request.GET.get('page')
+    tags = Tag.objects.all()
+    paginator = Paginator(list, 10)
+    try:
+        list = paginator.page(page)  # 获取当前页码的记录
+    except PageNotAnInteger:
+        list = paginator.page(1)  # 如果用户输入的页码不是整数时,显示第1页的内容
+    except EmptyPage:
+        list = paginator.page(paginator.num_pages)  # 如果用户输入的页数不在系统的页码列表中时,显示最后一页的内容
+    return render(request, 'search.html', locals())
 
+# 关于我们
 def about(request):
-    pass
+    allcategory = Category.objects.all()
+    return render(request, 'page.html',locals())
 
 
 
