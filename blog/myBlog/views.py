@@ -1,59 +1,9 @@
 import markdown
 from django.shortcuts import render
-
-# Create your views here.
-
 from django.http import HttpResponse
 from .models import Article,Category,Link,Tui,Tag,Banner
 # 分页插件包
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-# def hello(request):
-#     return HttpResponse('欢迎使用django！')
-#
-# def index(request):
-#     # 添加两个变量，并给它们赋值
-#     sitename = 'Django 中文网'
-#     url = 'www.django.cn'
-#     # 新加一个列表
-#     list = [
-#         '开发前的准备',
-#         '项目需求分析',
-#         '数据库设计分析',
-#         '创建项目',
-#         '基础配置',
-#         '欢迎页面',
-#         '创建数据库模型',
-#     ]
-#     # 在来的基础上新加一个字典
-#     mydict = {
-#         'name': '吴秀峰',
-#         'qq': '445813',
-#         'wx': 'vipdjango',
-#         'email': '445813@qq.com',
-#         'Q群': '10218442',
-#     }
-#     # 把两个变量封装到上下文里
-#     context = {
-#         'sitename': sitename,
-#         'url': url,
-#         'list':list,
-#         'mydict': mydict,
-#     }
-#     # 把上下文传递到模板里
-#     return render(request,'index.html',context)
-#
-#
-# def articleList(request):
-#     #对Article进行声明并实例化，然后生成对象allarticle
-#
-#     article = Article.objects.all()
-#
-#     #把查询到的对象，封装到上下文
-#     context = {
-#         'allarticle': article,
-#     }
-#     return render(request,'allarticle.html',context)
 
 
 
@@ -112,11 +62,17 @@ def list(request,lid):
 
 def show(request,sid):
     show = Article.objects.all().get(id = sid)
-    show.body = markdown.markdown(show.body,extensions=[
-        'markdown.extensions.extra',
-        'markdown.extensions.codehilite',
-        'markdown.extensions.toc'
-    ])
+    # show.body = markdown.markdown(show.body,extensions=[
+    #     'markdown.extensions.extra',
+    #     'markdown.extensions.codehilite',
+    #     'markdown.extensions.toc'
+    # ])
+    show.body = markdown.markdown(show.body,
+                      extensions=[
+                          'markdown.extensions.extra',
+                          'markdown.extensions.codehilite',
+                          'markdown.extensions.toc',
+                      ])
     allcategory = Category.objects.all()
     tags = Tag.objects.all()
     remen = Article.objects.all().filter(tui_id = 2)[: 6]

@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myBlog',
-    'DjangoUeditor',
     'mdeditor', # Markdown 编辑器
 ]
 

@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 
 from django.contrib.auth.models import User
-from DjangoUeditor.models import UEditorField #头部增加这行代码导入UEditorField
 from mdeditor.fields import MDTextField #必须导入
 
 # 文章分类
@@ -51,11 +50,7 @@ class Article(models.Model):
     # 使用外键关联标签列表与标签是多对多的关系
     tag = models.ManyToManyField(Tag,verbose_name='标签',blank=True)
     img = models.ImageField(upload_to='article_img/%Y/%m/%d/',verbose_name='文章图片',blank=True,null=True)
-    # body = UEditorField('内容', width=800, height=500,
-    #                 toolbars="full", imagePath="upimg/", filePath="upfile/",
-    #                 upload_settings={"imageMaxSize": 1204000},
-    #                 settings={}, command=None, blank=True
-    #                 )
+
     # 文章正文
     body = MDTextField()  # 修改这个类型
 

@@ -1,9 +1,9 @@
 from django.contrib import admin
+from django.db import models
+from mdeditor.widgets import MDEditorWidget
 
 # Register your models here.
 from .models import Category,Tag,Tui,Banner,Article,Link
-
-
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
@@ -37,3 +37,4 @@ class TuiAdmin(admin.ModelAdmin):
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
     list_display = ('id', 'name','linkurl')
+

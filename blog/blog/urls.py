@@ -26,7 +26,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),# 管理后台
-    path('ueditor/', include('DjangoUeditor.urls')),  # 添加DjangoUeditor的URL
     re_path('^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),#增加此行
     path('', views.index,name='index'),
     #把原来的views.hello修改成views.index  ''留空，表示为首页
