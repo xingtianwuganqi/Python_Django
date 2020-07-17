@@ -67,12 +67,8 @@ def show(request,sid):
     #     'markdown.extensions.codehilite',
     #     'markdown.extensions.toc'
     # ])
-    show.body = markdown.markdown(show.body,
-                      extensions=[
-                          'markdown.extensions.extra',
-                          'markdown.extensions.codehilite',
-                          'markdown.extensions.toc',
-                      ])
+
+
     allcategory = Category.objects.all()
     tags = Tag.objects.all()
     remen = Article.objects.all().filter(tui_id = 2)[: 6]
@@ -81,6 +77,12 @@ def show(request,sid):
     netx_blog = Article.objects.filter(create_time__lt=show.create_time,category=show.category.id).last()
     show.views = show.views + 1
     show.save()
+    show.body = markdown.markdown(show.body,
+                                      extensions=[
+                                          'markdown.extensions.extra',
+                                          'markdown.extensions.codehilite',
+                                          'markdown.extensions.toc',
+                                      ])
     return render(request,'show.html',locals())
 
 def tag(request,tag):

@@ -53,7 +53,7 @@ class Article(models.Model):
 
     # 文章正文
     body = MDTextField()  # 修改这个类型
-
+    # 要显示的正文
     user = models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='作者')
     views = models.PositiveIntegerField('阅读量',default=0)
     tui = models.ForeignKey(Tui,on_delete=models.DO_NOTHING,blank=True,null=True)
