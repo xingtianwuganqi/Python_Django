@@ -1,4 +1,4 @@
-﻿
+﻿{% extends 'base.html'%}
 {% block content %}
  <div id="main-container" class="container clearfix">
 	<section class="post-left">
@@ -24,19 +24,8 @@
 	<!-- /post-right -->
 <aside class="post-right hidden-xs">
 <!-- /关注我们 -->
-            <div class="post-right-item">
-                <h4 class="post-right-title">关注我</h4>
-                <div class="wid-about">
-                    <p></p>
-                    <img src="static/picture/weixinqr.jpg" width="160" height="160">
-                </div>
-                <div class="wid-about">
-                    <p><strong>联系方式:</strong></p>
-                    <p>QQ:254032134</p>
-                    <p>Email：rxswift@126.com</p>
-                </div>
-            </div>
 
+    {% include 'about.html' %}
 </aside>
 </div>
 <!-- /主体 -->
