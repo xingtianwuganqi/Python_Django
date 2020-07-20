@@ -4,6 +4,7 @@
     <list default="true" id="71ca27e2-5f6a-4f6b-b9cd-e4ecf9da7a9c" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/templates/about.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/picture/black-logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/static/picture/black-logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/page.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/right.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/right.html" afterDir="false" />
@@ -56,12 +57,12 @@
           <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/static/picture/black-logo.png">
           <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/picture/auth.jpg">
           <provider selected="true" editor-type-id="images" />
         </entry>
@@ -180,6 +181,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static/picture" />
       <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$/static" />
     </key>
@@ -239,6 +241,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="183" y="23" width="1440" height="829" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -446,13 +449,13 @@
     <entry file="file://$PROJECT_DIR$/static/picture/ggg.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/static/picture/auth.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/static/picture/firefox503.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/static/picture/black-logo.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/picture/auth.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
   </component>
