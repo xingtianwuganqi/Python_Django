@@ -87,7 +87,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'tutorial',# 数据库名
         'USER': 'root',# 用户名
-        'PASSWORD': '',# 数据库密码
+        'PASSWORD': '',  # 数据库密码
         'HOST':'localhost', # 数据库服务器ip
         'PORT':'3306' # 端口
     }
