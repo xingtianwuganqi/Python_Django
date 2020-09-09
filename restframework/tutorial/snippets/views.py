@@ -74,61 +74,144 @@ Request对象的核心功能是request.data属性，
 1.用于基于函数视图的@api_view装饰器
 2.用于基于类视图的APIView类
 '''
-@api_view(['GET','POST'])
-def snippet_list(request):
-    '''
-    列出所有的snippets，或者创建一个新的snippet
-    '''
-    if request.method == 'GET': # 序列化
-        snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets,many=True) # many = True 列表形式
-        return Response(serializer.data)
-    elif request.method == 'POST': # 反序列化
-        serializer = SnippetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['GET','POST'])
+# def snippet_list(request):
+#     '''
+#     列出所有的snippets，或者创建一个新的snippet
+#     '''
+#     if request.method == 'GET': # 序列化
+#         snippets = Snippet.objects.all()
+#         serializer = SnippetSerializer(snippets,many=True) # many = True 列表形式
+#         return Response(serializer.data)
+#     elif request.method == 'POST': # 反序列化
+#         serializer = SnippetSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data,status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# @api_view(['GET','PUT','DELETE'])
+# def snippet_detail(request,pk):
+#     '''
+#     获取，更新或删除一个snippet对象
+#     '''
+#     try:
+#         snippet = Snippet.objects.get(pk=pk)
+#     except Snippet.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#
+#     if request.method == 'GET':
+#         serializer = SnippetSerializer(snippet)
+#         return Response(serializer.data)
+#     elif request.method == 'PUT':
+#         serializer = SnippetSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+#     elif request.method == 'DELETE':
+#         snippet.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
+'''
+使用基于类的视图重写我们的API
+'''
+from rest_framework.views import APIView
+from django.http import Http404
 
-@api_view(['GET','PUT','DELETE'])
-def snippet_detail(request,pk):
-    '''
-    获取，更新或删除一个snippet对象
-    '''
-    try:
-        snippet = Snippet.objects.get(pk=pk)
-    except Snippet.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+# class SnippetList(APIView):
+#
+#     def get(self,request,format = None):
+#         snippet = Snippet.objects.all()
+#         serializer = SnippetSerializer(snippet,many = True)
+#         return Response(serializer.data)
+#
+#     def post(self,request,format = None):
+#         serializer = SnippetSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data,status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# class SnippetDetail(APIView):
+#
+#     def get_object(self,pk):
+#         try:
+#             return Snippet.objects.get(pk=pk)
+#         except Snippet.DoesNotExist:
+#             return Http404
+#
+#     def get(self,request,pk,format=None):
+#         snippet = self.get_object(pk)
+#         serializer = SnippetSerializer(snippet)
+#         return Response(serializer.data)
+#
+#     def put(self,request,pk,format=None):
+#         snippet = self.get_object(pk)
+#         serializer = SnippetSerializer(snippet,data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data,status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+#
+#     def delete(self,request,pk,format=None):
+#         snippet = self.get_object(pk)
+#         snippet.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    if request.method == 'GET':
-        serializer = SnippetSerializer(snippet)
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        serializer = SnippetSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+from rest_framework import mixins
+from rest_framework import generics
 
+'''
+使用混合（mixins）
+使用基于类视图的最大优势之一是它可以轻松地创建可复用的行为。
 
+到目前为止，我们使用的创建/获取/更新/删除操作和我们创建的任何基于模型的API视图非常相似。
+这些常见的行为是在REST框架的mixin类中实现的。
+'''
+# 使用混合mixin
+# class SnippetList(mixins.ListModelMixin,
+#                   mixins.CreateModelMixin,
+#                   generics.GenericAPIView
+#                   ):
+#     queryset = Snippet.objects.all()
+#     serializer_class = SnippetSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.list(request=request,*args, **kwargs)
+#
+#     def post(self,request, *args , **kwargs):
+#         return self.create(request, *args, **kwargs)
+#
+#
+# class SnippetDetail(mixins.RetrieveModelMixin,
+#                     mixins.UpdateModelMixin,
+#                     mixins.DestroyModelMixin,
+#                     generics.GenericAPIView):
+#     queryset = Snippet.objects.all()
+#     serializer_class = SnippetSerializer
+#
+#     def get(self,request, *args, **kwargs):
+#         return self.retrieve(request, *args, **kwargs)
+#
+#     def put(self,request, *args, **kwargs):
+#         return self.update(request, *args,**kwargs)
+#
+#     def delete(self,request, *args, **kwargs):
+#         return self.destroy(request,*args,**kwargs)
 
+'''使用通用的基于类的视图
+通过使用mixin类，我们使用更少的代码重写了这些视图，但我们还可以再进一步。REST框架提供了一组已经混合好（mixed-in）的通用视图'''
 
+class SnippetList(generics.ListCreateAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
 
-
-
-
-
-
-
-
-
-
-
-
+class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer
 
 
 
