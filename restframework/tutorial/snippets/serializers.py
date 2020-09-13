@@ -36,3 +36,17 @@ class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
         fields = ('id','title','code','linenos','language','style')
+
+'''
+创建一个新的序列化器
+
+因为'snippets' 在用户模型中是一个反向关联关系。在使用 ModelSerializer 类时它默认不会被包含，
+所以我们需要为它添加一个显式字段。
+'''
+from django.contrib.auth.models import User
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(many=True,queryset=Snippet)
+    owner = serializers.ReadOnlyField(source='owner.username')
+    class Meta:
+        model = User
+        field = ('id','username','snippets','owner')

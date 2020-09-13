@@ -61,7 +61,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Snippet
-from .serializers import SnippetSerializer
+from .serializers import SnippetSerializer,UserSerializer
 
 '''
 REST 框架引入乐乐一个扩展了常规HttpRequest的Request对象，并提供了更灵活的请求解析。
@@ -205,16 +205,27 @@ from rest_framework import generics
 '''使用通用的基于类的视图
 通过使用mixin类，我们使用更少的代码重写了这些视图，但我们还可以再进一步。REST框架提供了一组已经混合好（mixed-in）的通用视图'''
 
+from rest_framework import permissions
+from .permissions import IsOwnerOrReadOnly
+
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
 
+from django.contrib.auth.models import User
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
-
-
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
