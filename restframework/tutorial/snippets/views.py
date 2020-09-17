@@ -207,6 +207,7 @@ from rest_framework import generics
 
 from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.reverse import reverse
 
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
@@ -229,3 +230,14 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+@api_view(['GET'])
+def api_root(request,format=None):
+    '''
+    1.使用rest_framework 的reverse功能来返回完全限定的URL
+    2.URL模式是通过方便的名称来标识的，我们稍后将在snippets/urls.py中声明
+    '''
+    return Response({
+        'user': reverse('user-list',request=request,format=format),
+        'snippets': reverse('snippet-list',request=request,format=format)
+    })
