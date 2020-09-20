@@ -19,5 +19,7 @@ from app1 import views
 from django.conf.urls import url
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    url('^users/$',views.users)
+    url('^users/$',views.users),
+    url('^students/$', views.studentsView.as_view())
+
 ]
