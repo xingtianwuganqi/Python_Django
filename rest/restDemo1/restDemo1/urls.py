@@ -20,6 +20,9 @@ from django.conf.urls import url
 urlpatterns = [
     # path('admin/', admin.site.urls),
     url('^users/$',views.users),
-    url('^students/$', views.studentsView.as_view())
-
+    url('^students/$', views.studentsView.as_view()),
+    # url('^get_order/$', views.get_order),
+    # url('^del_order/$', views.del_order),
+    # url('^update_order/$', views.update_order),
+    url('^dog/$',views.DogView.as_view())
 ]

@@ -49,3 +49,41 @@ class TearchersView(MyBaseView, View):
 
     def post(self, request, *args, **kwargs):
         return HttpResponse('POST')
+
+
+
+# def get_order(request):
+#     pass
+#
+#
+# def del_order(request):
+#     pass
+#
+#
+# def update_order(request):
+#     pass
+
+from rest_framework.views import APIView
+from rest_framework.authentication import BasicAuthentication
+from rest_framework import exceptions
+class MyAuthentication(object):
+    def authenticate(self,request):
+        token = request._request.GET('token')
+        if not token:
+            raise exceptions.AuthenticationFailed('用户认证失败')
+        return ('alex',None)
+    def authenticate_header(self,val):
+        pass
+
+class DogView(APIView):
+    # 登录认证
+    authentication_classes = [MyAuthentication]
+
+    def get(self,request, *args, **kwargs):
+        return HttpResponse("获取Dog")
+    def post(self,request, *args, **kwargs):
+        return HttpResponse("获取Dog")
+    def put(self,request, *args, **kwargs):
+        return HttpResponse("获取Dog")
+    def delete(self,request, *args, **kwargs):
+        return HttpResponse("获取Dog")
