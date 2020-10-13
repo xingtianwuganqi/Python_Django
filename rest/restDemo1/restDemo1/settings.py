@@ -135,5 +135,9 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'Luffy': '3/m',# 3次每分钟,
         'LuffyUser':'10/m' # 10次每分钟
-    }
+    },
+    'DEFAULT_VERSION': 'v1',# 默认的版本
+    'ALLOWED_VERSIONS':['v1','v2'],# 允许的版本
+    'VERSION_PARAM':'version', # key值
+    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.URLPathVersioning' # 默认版本号
 }

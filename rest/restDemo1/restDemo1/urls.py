@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app1 import views
-from django.conf.urls import url
+from django.conf.urls import url,include
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -31,4 +31,7 @@ urlpatterns = [
     url(r'^api/v1/auth/$',views.AnthView.as_view()),
     url(r'^api/v1/register/$',views.UserView.as_view()),
     url(r'^api/v1/order/$',views.OrderView.as_view()),
+
+    # 分发
+    url(r'^api/',include('app1.urls'))
 ]

@@ -103,6 +103,7 @@ from app1.utils.permission import MyPermission
 from rest_framework.throttling import BaseThrottle
 import time
 from app1.utils.throttle import UserThrottle
+from rest_framework.versioning import QueryParameterVersioning,URLPathVersioning
 VISIT_RECORD = {}
 
 
@@ -264,5 +265,34 @@ class OrderView(APIView):
             pass
         return JsonResponse(ret)
 
+class ParamVersion(object):
+    def determine_version(self,request,*args,**kwargs):
+        versions = request.query_params.get('version')
+        return versions
 
+from django.urls import reverse
 
+class UsersView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    throttle_classes = []
+    # 版本处理
+    # versioning_class = ParamVersion
+    # versioning_class = QueryParameterVersioning
+    # versioning_class = URLPathVersioning
+    def get(self,request,*args,**kwargs):
+        # version = request._request.GET.get('version')
+        # versions = request.query_params.get('version')
+        # self.dispatch
+        # 获取版本
+        print(request.version)
+        # 获取处理版本的对象
+        print(request.versioning_scheme)
+        # 反向生成url
+        u1 = request.versioning_scheme.reverse(viewname='uuu',request=request)
+        print(u1)
+        # django反向生成url
+        u2 = reverse(viewname='uuu',kwargs={'version': 1})
+        print(u2)
+
+        return HttpResponse('用户列表')
