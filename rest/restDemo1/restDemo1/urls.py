@@ -29,5 +29,6 @@ urlpatterns = [
 
     url(r'^admin/$',admin.site.urls),
     url(r'^api/v1/auth/$',views.AnthView.as_view()),
-    url(r'^api/v1/register/$',views.UserView.as_view())
+    url(r'^api/v1/register/$',views.UserView.as_view()),
+    url(r'^api/v1/order/$',views.OrderView.as_view()),
 ]

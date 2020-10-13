@@ -66,6 +66,8 @@ def users(request):
 from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication
 from rest_framework import exceptions
+
+
 class MyAuthentication(object):
     def authenticate(self,request):
         token = request._request.GET('token')
@@ -94,6 +96,15 @@ class DogView(APIView):
 from django.shortcuts import render
 from django.http import JsonResponse
 from app1 import models
+from rest_framework.request import Request
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import BaseAuthentication
+from app1.utils.permission import MyPermission
+from rest_framework.throttling import BaseThrottle
+import time
+from app1.utils.throttle import UserThrottle
+VISIT_RECORD = {}
+
 
 def md5(user):
     import hashlib
@@ -104,9 +115,54 @@ def md5(user):
     m.update(bytes(ctime,encoding='utf-8'))
     return m.hexdigest()
 
+class VisitThrottle(object):
+    '''
+    60s内只能访问3次
+    可以存到数据库，redis
+    '''
+    def __init__(self):
+        self.history = None
+
+    def allow_request(self,request,view):
+        # 1.获取用户ip
+        remote_addr = request.META.get('REMOTE_ADDR')
+        print(remote_addr)
+        ctime = time.time()
+        if remote_addr not in VISIT_RECORD:
+            VISIT_RECORD[remote_addr] = [ctime,]
+            return True
+        history = VISIT_RECORD.get(remote_addr)
+        self.history = history
+        while history and history[-1] < ctime - 60:
+            history.pop()
+
+        if len(history) < 3:
+            history.insert(0,ctime)
+            return True
+
+        return False  # False 访问频率太高，被限制
+
+    def wait(self):
+        # 需要等待多少秒
+        ctime = time.time()
+        second = 60 - (ctime - self.history[-1])
+        return second
+
 class AnthView(APIView):
 
+    '''
+    登录
+    '''
+    authentication_classes = []
+    permission_classes = []
+    throttle_classes = [VisitThrottle]
     def post(self,request,*args,**kwargs):
+
+        # 1.request中获取ip
+        # 2.访问记录
+
+
+
         ret = {'code':1000,'msg':None}
         try:
             user = request._request.POST.get('username')
@@ -128,13 +184,14 @@ class AnthView(APIView):
 
 
 class UserView(APIView):
-
+    authentication_classes = []
+    permission_classes = []
+    throttle_classes = [VisitThrottle]
     def post(self,request,*args,**kwargs):
         ret = {
             'code': 1000,
             'msg': None
         }
-        print(request._request)
         try:
             username = request._request.POST.get('username')
             pwd = request._request.POST.get('password')
@@ -155,15 +212,57 @@ class UserView(APIView):
             models.UserToken.objects.update_or_create(user=obj,defaults={'token':token})
             ret['token'] = token
         except Exception as e:
-            print(e)
             ret['code'] = 1002
             ret['msg'] = '请求异常'
-            print(ret)
 
         return JsonResponse(ret)
 
+ORDER_DICT = {
+    1:{
+        'name':'杏子',
+        'age': 19,
+        'gender':'女',
+        'content': '呵呵'
+    },
+    2:{
+        'name':'狗子',
+        'age': 18,
+        'gender':'男',
+        'content': '哈哈'
+    }
+}
+
+# class Authtication(object):
+#
+#     def authenticate(self,request):
+#         token = request._request.GET.get('token')
+#         token_obj = models.UserToken.objects.filter(token=token).first()
+#         if not token:
+#             raise exceptions.AuthenticationFailed('用户认证失败')
+#         # 在rest_framework 内部会将两个字段赋值给request，以供后续使用 request.user request.auth
+#         return (token_obj.user,token_obj)
+#
+#     def authenticate_header(self,request):
+#         pass
 
 
+class OrderView(APIView):
+    '''
+    订单相关业务
+    '''
+
+    # authentication_classes = []
+    permission_classes = [MyPermission]
+    throttle_classes = [UserThrottle] # 访问评论
+    def get(self,request,*args, **kwargs):
+
+
+        ret = {'code': 1000,'msg': None,'data': None}
+        try:
+            ret['data'] = ORDER_DICT
+        except Exception as e:
+            pass
+        return JsonResponse(ret)
 
 
 

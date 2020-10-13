@@ -123,3 +123,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':['app1.utils.auth.Authtication'],
+    'UNAUTHENTICATED_USER':lambda :'匿名用户',
+    'UNAUTHENTICATED_USER': None, # 匿名：request.user = None
+    'UNAUTHENTICATED_TOKEN': None, # 匿名：request.auth = None
+    'DEFAULT_PERMISSION_CLASSES': ['app1.utils.permission.MyPermission'],
+    'DEFAULT_THROTTLE_CLASSES': ['app1.utils.throttle.VisitThrottle'],
+    'DEFAULT_THROTTLE_RATES': {
+        'Luffy': '3/m',# 3次每分钟,
+        'LuffyUser':'10/m' # 10次每分钟
+    }
+}
