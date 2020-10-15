@@ -139,5 +139,6 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSION': 'v1',# 默认的版本
     'ALLOWED_VERSIONS':['v1','v2'],# 允许的版本
     'VERSION_PARAM':'version', # key值
-    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.URLPathVersioning' # 默认版本号
+    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.URLPathVersioning', # 默认版本号,
+    'DEFAULT_PARSER_CLASSES':['rest_framework.parsers.JSONParser','rest_framework.parsers.FormParser']
 }

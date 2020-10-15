@@ -296,3 +296,37 @@ class UsersView(APIView):
         print(u2)
 
         return HttpResponse('用户列表')
+
+class DjangoView(APIView):
+    def get(self,request, *args, **kwargs):
+        print(type(request._request))
+        return HttpResponse('POST和body')
+
+from rest_framework.parsers import JSONParser,FormParser
+class ParserView(APIView):
+    '''
+    JSONParser
+    表示允许用户发送json数据
+    a.content-type: application/json
+    b.{name:alex,age:18}
+
+    FormParser
+    支持form表单请求
+    content-type:application/x-www-form-urlencoded
+    '''
+    # parser_classes = [JSONParser,FormParser]
+    def post(self,request, *args, **kwargs):
+        # 获取解析后的结果
+        '''
+        1.获取用户的请求头
+        2.获取用户的请求体
+        3.根据用户请求头和parser_classes = [JSONParser,FormParser]中支持的请求头进行比较
+        4.JSONParser对象去处理请求体
+        5.request.data
+        '''
+        print(request.data)
+        self.dispatch
+        return HttpResponse('POST和body')
+
+
+
