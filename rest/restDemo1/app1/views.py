@@ -355,7 +355,6 @@ class RolesSerializer(serializers.ModelSerializer):
         model = models.UserInfo
         # fields = "__all__"
         fields = ('id','username','user_type','usertype','rls')
-        extra_kwargs = {'group':}
     # def get_rls(self,row):
     #     role_objc_list = row.roles.all()
     #     ret = []
