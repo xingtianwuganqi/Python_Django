@@ -187,7 +187,7 @@ class AnthView(APIView):
 class UserView(APIView):
     authentication_classes = []
     permission_classes = []
-    throttle_classes = [VisitThrottle]
+    throttle_classes = []
     def post(self,request,*args,**kwargs):
         ret = {
             'code': 1000,
@@ -213,6 +213,7 @@ class UserView(APIView):
             models.UserToken.objects.update_or_create(user=obj,defaults={'token':token})
             ret['token'] = token
         except Exception as e:
+            print(e)
             ret['code'] = 1002
             ret['msg'] = '请求异常'
 
@@ -328,5 +329,62 @@ class ParserView(APIView):
         self.dispatch
         return HttpResponse('POST和body')
 
+# 自定义字段
+from rest_framework import serializers
+# class RolesSerializer(serializers.Serializer):
+#     username = serializers.CharField()
+#     usertype = serializers.IntegerField(source="user_type")
+    # type = serializers.IntegerField(source='get_user_type_display') # 获取用户类型的形容词
+    # gp = serializers.CharField(source='group.id') # 获取关联表的数据
+    # gp_title = serializers.CharField(source='group.title')
+    # # 获取角色的所有数据,自定义显示
+    # rls = serializers.SerializerMethodField()
+    #
+    # def get_rls(self,row):
+    #     role_objc_list = row.roles.all()
+    #     ret = []
+    #     for item in role_objc_list:
+    #         ret.append({'id':item.id,'title':item.title})
+    #     return ret
+
+class RolesSerializer(serializers.ModelSerializer):
+    usertype = serializers.IntegerField(source="user_type")
+    # rls = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.UserInfo
+        # fields = "__all__"
+        fields = ('id','username','user_type','usertype','rls')
+        extra_kwargs = {'group':}
+    # def get_rls(self,row):
+    #     role_objc_list = row.roles.all()
+    #     ret = []
+    #     for item in role_objc_list:
+    #         ret.append({'id':item.id,'title':item.title})
+    #     return ret
+
+class RolesView(APIView):
+
+    # def get(self,request,*args,**kwargs):
+    #     # 方式一
+    #     roles = models.Role.objects.all().values('id','title')
+    #     roles = list(roles)
+    #     ret = json.dump(roles)
+    #     return HttpResponse(ret)
 
 
+    authentication_classes = []
+    permission_classes = []
+    throttle_classes = []
+    def get(self,request,*args,**kwargs):
+        # user = models.UserInfo.objects.all().values('username','user_type')
+        # user = list(user)
+        # users = json.dumps(user,ensure_ascii=False)
+
+        #方式二：对于[obj,obj,obj]
+        rest_user = models.UserInfo.objects.all()
+        print(rest_user)
+        ser = RolesSerializer(instance=rest_user,many=True) # 对于数组 （many=False）#单个数据
+        ser_data = json.dumps(ser.data,ensure_ascii=False)
+
+        return HttpResponse(ser_data)

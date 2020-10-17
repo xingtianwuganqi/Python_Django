@@ -12,7 +12,7 @@ class UserInfo(models.Model):
         (3,'SVIP')
     )
     user_type = models.IntegerField(choices=user_type_choices)
-    group = models.ForeignKey("UserGroup",on_delete=models.CASCADE)
+    # group = models.ForeignKey("UserGroup",on_delete=models.CASCADE)
     username = models.CharField(max_length=32,unique=True)
     password = models.CharField(max_length=64)
     roles = models.ManyToManyField("Role")
