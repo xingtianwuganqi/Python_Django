@@ -350,11 +350,16 @@ from rest_framework import serializers
 class RolesSerializer(serializers.ModelSerializer):
     usertype = serializers.IntegerField(source="user_type")
     # rls = serializers.SerializerMethodField()
+    '''
+    返回的group参数是url
+    '''
+    # group = serializers.HyperlinkedIdentityField(view_name='gp', lookup_field ='group_id', lookup_url_kwarg = 'pk')
+
 
     class Meta:
         model = models.UserInfo
         # fields = "__all__"
-        fields = ('id','username','user_type','usertype','rls')
+        fields = ('id','username','user_type','usertype')
     # def get_rls(self,row):
     #     role_objc_list = row.roles.all()
     #     ret = []
@@ -383,7 +388,28 @@ class RolesView(APIView):
         #方式二：对于[obj,obj,obj]
         rest_user = models.UserInfo.objects.all()
         print(rest_user)
-        ser = RolesSerializer(instance=rest_user,many=True) # 对于数组 （many=False）#单个数据
+        '''
+        many=True对应数组 （many=False）单个数据
+        生成链接需要context参数
+        '''
+        ser = RolesSerializer(instance=rest_user,many=True,context={'request': request})
         ser_data = json.dumps(ser.data,ensure_ascii=False)
 
+        return HttpResponse(ser_data)
+
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserGroup
+        fields = "__all__"
+
+class GroupView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    throttle_classes = []
+    def get(self,*args,**kwargs):
+        # 从URL传参中获取pk参数
+        pk = kwargs.get('pk')
+        group = models.UserGroup.objects.filter(pk=pk).first()
+        ser = GroupSerializer(instance=group,many=False)
+        ser_data = json.dumps(ser.data)
         return HttpResponse(ser_data)
