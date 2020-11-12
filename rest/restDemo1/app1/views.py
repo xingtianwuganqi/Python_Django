@@ -397,10 +397,31 @@ class RolesView(APIView):
 
         return HttpResponse(ser_data)
 
+# 类校验方法
+class TitleValidatar(object):
+    def __init__(self,base):
+        self.base = base
+
+    def __call__(self, value):
+        if not value.startwith(self.base):
+            message = '标题已%s为开头' % self.base
+            raise serializers.ValidationError(message)
+    def set_context(self,serializer_field):
+        # 执行验证之前调用，serializer_field是当前字段对象
+        pass
+
 class GroupSerializer(serializers.ModelSerializer):
+    title = serializers.EmailField(error_messages={'required':'标题不能为空'},validators=[TitleValidatar('Django')])
     class Meta:
         model = models.UserGroup
         fields = "__all__"
+
+    # 钩子方法校验
+    def validate_title(self,value):
+        from rest_framework import exceptions
+        if not value:
+            raise exceptions.ValidationError('不能为空')
+        return value
 
 class GroupView(APIView):
     authentication_classes = []
@@ -411,5 +432,12 @@ class GroupView(APIView):
         pk = kwargs.get('pk')
         group = models.UserGroup.objects.filter(pk=pk).first()
         ser = GroupSerializer(instance=group,many=False)
+        # 验证
+        if ser.is_valid():
+            print(ser.validated_data['title'])
+        else:
+            print(ser.errors)
         ser_data = json.dumps(ser.data)
         return HttpResponse(ser_data)
+
+
