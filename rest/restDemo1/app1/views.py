@@ -105,7 +105,7 @@ import time
 from app1.utils.throttle import UserThrottle
 from rest_framework.versioning import QueryParameterVersioning,URLPathVersioning
 VISIT_RECORD = {}
-
+from models import Role
 
 def md5(user):
     import hashlib
@@ -441,3 +441,17 @@ class GroupView(APIView):
         return HttpResponse(ser_data)
 
 
+class PagerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+    fields = "__all__"
+
+from rest_framework.generics import GenericAPIView
+
+class View1View(GenericAPIView):
+    queryset = models.Role.objects.all()
+    serializer_class = PagerSerializer
+    # pagination_class =
+    def get(self,request, *args, **kwargs):
+        roles = self.get_queryset()
+        pager_roles = self.paginate_queryset(roles)
